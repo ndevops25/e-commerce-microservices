@@ -4,14 +4,14 @@ Sistema de e-commerce baseado em microserviços para gerenciamento de produtos, 
 
 ## Arquitetura de Microserviços
 
+![Microservices](assets/project/images/microservices.png)
+
 O projeto é composto por quatro microserviços independentes que se comunicam entre si:
 
 1. **Microserviço de Produtos**: Gerencia o catálogo de produtos, incluindo detalhes, preços e estoque
 2. **Microserviço de Categorias**: Gerencia a hierarquia de categorias e seus atributos
 3. **Microserviço de Fornecedores**: Gerencia fornecedores, contatos e entregas
 4. **Microserviço de Avaliações**: Gerencia avaliações de produtos e seus resumos
-
-![Microservices](assets/project/images/microservices.png)
 
 ## Tecnologias Utilizadas
 
@@ -176,6 +176,77 @@ Os tópicos de eventos seguiriam o padrão descrito abaixo:
 4. Verifique se os serviços estão rodando:
    ```
    docker-compose ps
+   ```
+
+### Gerando Imagens Docker Manualmente
+
+Caso você prefira gerar e gerenciar as imagens Docker individualmente, siga estas instruções:
+
+1. Construa cada imagem separadamente:
+
+   **Microserviço de Produtos**
+   ```bash
+   cd services/products
+   docker build -t ecommerce/products:latest .
+   ```
+
+   **Microserviço de Categorias**
+   ```bash
+   cd services/categories
+   docker build -t ecommerce/categories:latest .
+   ```
+
+   **Microserviço de Fornecedores**
+   ```bash
+   cd services/suppliers
+   docker build -t ecommerce/suppliers:latest .
+   ```
+
+   **Microserviço de Avaliações**
+   ```bash
+   cd services/reviews
+   docker build -t ecommerce/reviews:latest .
+   ```
+
+2. Execute cada container individualmente:
+
+   **Produtos**
+   ```bash
+   docker run -d -p 5000:5000 --name products -e DATABASE_URL=sqlite:///products.db ecommerce/products:latest
+   ```
+
+   **Categorias**
+   ```bash
+   docker run -d -p 5001:5001 --name categories -e DATABASE_URL=sqlite:///categories.db ecommerce/categories:latest
+   ```
+
+   **Fornecedores**
+   ```bash
+   docker run -d -p 5002:5002 --name suppliers -e DATABASE_URL=sqlite:///suppliers.db ecommerce/suppliers:latest
+   ```
+
+   **Avaliações**
+   ```bash
+   docker run -d -p 5003:5003 --name reviews -e DATABASE_URL=sqlite:///reviews.db ecommerce/reviews:latest
+   ```
+
+3. Verifique se os containers estão em execução:
+   ```bash
+   docker ps
+   ```
+
+4. Para publicar suas imagens em um registry (como Docker Hub):
+   ```bash
+   # Faça login no Docker Hub
+   docker login
+   
+   # Adicione tags às imagens
+   docker tag ecommerce/products:latest seu-usuario/ecommerce-products:latest
+   
+   # Envie a imagem para o registry
+   docker push seu-usuario/ecommerce-products:latest
+   
+   # Repita para os outros microserviços
    ```
 
 ### Sem Docker (Desenvolvimento)
