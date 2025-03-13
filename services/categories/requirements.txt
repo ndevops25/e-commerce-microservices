@@ -1,9 +1,0 @@
-Flask==2.2.3
-Flask-SQLAlchemy==3.0.3
-SQLAlchemy==2.0.4
-gunicorn==20.1.0
-python-dotenv==1.0.0
-requests==2.28.2
-marshmallow==3.19.0
-psycopg2-binary==2.9.5  # Driver para PostgreSQL
-redis==4.5.1  # Para cache
