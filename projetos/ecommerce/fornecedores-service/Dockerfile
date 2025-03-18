@@ -19,4 +19,4 @@ COPY app.py .
 EXPOSE 6004
 
 # Comando para iniciar o aplicativo quando o container for executado
-CMD ["gunicorn", "--bind", "0.0.0.0:6004", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:6003", "app:app"]

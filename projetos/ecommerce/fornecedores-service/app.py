@@ -172,4 +172,4 @@ def health_check():
     return jsonify({'status': 'ok', 'service': 'fornecedores'})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=6004)
+    app.run(host='0.0.0.0', port=6003)

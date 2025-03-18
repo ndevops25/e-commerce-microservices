@@ -4,7 +4,7 @@ Sistema de e-commerce baseado em microserviços para gerenciamento de produtos, 
 
 ## Arquitetura de Microserviços
 
-![Microservices](assets/project/images/microservices.png)
+![Microservices](assets/projeto/imagens/microservices.png)
 
 O projeto é composto por quatro microserviços independentes que se comunicam entre si:
 
@@ -29,55 +29,53 @@ O projeto é composto por quatro microserviços independentes que se comunicam e
 
 ```
 E-COMMERCE-MICROSERVICES/
-├── services/
-│   ├── categorias-service/
-│   │   ├── app.py
-│   │   ├── Dockerfile
-│   │   └── requirements.txt
-│   ├── produtos-service/
-│   │   ├── app.py
-│   │   ├── Dockerfile
-│   │   └── requirements.txt
+├─ assets/
+├── projetos/
+│   ├── imagens/
+│   │   ├── microservices.png
+│   ├─ microservices.xml
+
+├─ projetos/
+├── ecommerce/
 │   ├── avaliacoes-service/
 │   │   ├── app.py
 │   │   ├── Dockerfile
 │   │   └── requirements.txt
-│   └── fornecedores-service/
+│   ├── categorias-service/
+│   │   ├── app.py
+│   │   ├── Dockerfile
+│   │   └── requirements.txt
+│   ├── fornecedores-service/
+│   │   ├── app.py
+│   │   ├── Dockerfile
+│   │   └── requirements.txt
+│   └── produtos-service/
 │       ├── app.py
 │       ├── Dockerfile
 │       └── requirements.txt
-├── .gitignore
-└── README.md
+├ .gitignore
+└ README.md
 ```
 
-## Comunicação entre Serviços
+## Endpoints (API REST)
 
-### Comunicações Síncronas (API REST)
+#### Avaliações
+- `GET /avaliacoes/produtos/<product_id>`: Para obter detalhes do produto ao exibir avaliações
+- `GET /health`: Para testar o funcionamento da API/microserviço
 
-Os microserviços se comunicam diretamente via chamadas HTTP para operações que necessitam de resposta imediata:
+#### Categorias
+- `GET /categorias`: Para listar todas as catregorias
+- `GET /health`: Para testar o funcionamento da API/microserviço
 
-#### Produtos → Categorias
-- `GET /categories/{id}`: Para validar se a categoria existe ao cadastrar/atualizar um produto
-- `GET /categories/hierarchy`: Para obter árvore de categorias
-- `GET /categories/attributes/{id}`: Para obter atributos de uma categoria
+#### Fornecedores
+- `GET /fornecedores`: Para listar todas os fornecedores
+- `GET /health`: Para testar o funcionamento da API/microserviço
 
-#### Produtos → Fornecedores
-- `GET /suppliers/{id}`: Para validar se um fornecedor existe
-- `GET /suppliers/{id}/products`: Para listar produtos de um fornecedor
+#### Produtos
+- `GET /produtos`: Para listar todas os produtos
+- `GET /produtos/{id}`: Para validar se a categoria existe ao cadastrar/atualizar um produto
+- `GET /health`: Para testar o funcionamento da API/microserviço
 
-#### Produtos → Avaliações
-- `GET /reviews/products/{id}`: Para obter avaliações de um produto
-- `GET /reviews/products/{id}/summary`: Para obter resumo de avaliações
-
-#### Categorias → Produtos
-- `GET /products/category/{id}`: Para listar produtos de uma categoria
-
-#### Fornecedores → Produtos
-- `PATCH /products/{id}/stock`: Para atualizar estoque após uma entrega
-- `PATCH /products/{id}/price`: Para atualizar preço quando há alteração de custo
-
-#### Avaliações → Produtos
-- `GET /products/{id}`: Para obter detalhes do produto ao exibir avaliações
 
 ### Comunicações Assíncronas (Futuro)
 
@@ -157,22 +155,21 @@ Caso você prefira gerar e gerenciar as imagens Docker individualmente, siga est
 
    **Produtos**
    ```bash
-   docker run -d -p 6001:6001 --name produtos ecommerce/produtos:latest
+   docker run -p 6001:6001 --name produtos-service ecommerce/produtos:latest
    ```
 
    **Categorias**
    ```bash
-   docker run -d -p 6002:6002 --name categorias ecommerce/categorias:latest
+   docker run -p 6002:6002 --name categorias-service ecommerce/categorias:latest
+   ```
+   **Avaliações**
+   ```bash
+   docker run -p 6003:6003 --name avaliacoes-service ecommerce/avaliacoes:latest
    ```
 
    **Fornecedores**
    ```bash
-   docker run -d -p 6003:6003 --name fornecedores ecommerce/fornecedores:latest
-   ```
-
-   **Avaliações**
-   ```bash
-   docker run -d -p 6004:6004 --name avaliacoes ecommerce/avaliacoes:latest
+   docker run -p 6004:6004 --name fornecedores-service ecommerce/fornecedores:latest
    ```
 
 3. Verifique se os containers estão em execução:
