@@ -16,10 +16,7 @@ O projeto é composto por quatro microserviços independentes que se comunicam e
 ## Tecnologias Utilizadas
 
 - **Backend**: Python 3.10 com Flask
-- **Banco de Dados**: SQLite (desenvolvimento), PostgreSQL (produção)
 - **Containerização**: Docker
-- **Webserver**: Gunicorn
-- **ORM**: SQLAlchemy
 - **Comunicação**: REST APIs
 
 ## Requisitos
@@ -33,19 +30,19 @@ O projeto é composto por quatro microserviços independentes que se comunicam e
 ```
 E-COMMERCE-MICROSERVICES/
 ├── services/
-│   ├── categories/
+│   ├── categorias-service/
 │   │   ├── app.py
 │   │   ├── Dockerfile
 │   │   └── requirements.txt
-│   ├── products/
+│   ├── produtos-service/
 │   │   ├── app.py
 │   │   ├── Dockerfile
 │   │   └── requirements.txt
-│   ├── reviews/
+│   ├── avaliacoes-service/
 │   │   ├── app.py
 │   │   ├── Dockerfile
 │   │   └── requirements.txt
-│   └── suppliers/
+│   └── fornecedores-service/
 │       ├── app.py
 │       ├── Dockerfile
 │       └── requirements.txt
@@ -122,60 +119,8 @@ Os tópicos de eventos seguiriam o padrão descrito abaixo:
 
 1. Clone o repositório:
    ```
-   git clone https://github.com/seu-usuario/e-commerce-microservices.git
+   git clone https://github.com/ndevops25/e-commerce-microservices
    cd e-commerce-microservices
-   ```
-
-2. Crie o arquivo docker-compose.yml com o seguinte conteúdo:
-   ```yaml
-   version: '3'
-   
-   services:
-     products:
-       build: ./services/products
-       ports:
-         - "5000:5000"
-       environment:
-         - DATABASE_URL=sqlite:///products.db
-       volumes:
-         - ./services/products:/app
-   
-     categories:
-       build: ./services/categories
-       ports:
-         - "5001:5001"
-       environment:
-         - DATABASE_URL=sqlite:///categories.db
-       volumes:
-         - ./services/categories:/app
-   
-     suppliers:
-       build: ./services/suppliers
-       ports:
-         - "5002:5002"
-       environment:
-         - DATABASE_URL=sqlite:///suppliers.db
-       volumes:
-         - ./services/suppliers:/app
-   
-     reviews:
-       build: ./services/reviews
-       ports:
-         - "5003:5003"
-       environment:
-         - DATABASE_URL=sqlite:///reviews.db
-       volumes:
-         - ./services/reviews:/app
-   ```
-
-3. Execute os serviços:
-   ```
-   docker-compose up -d
-   ```
-
-4. Verifique se os serviços estão rodando:
-   ```
-   docker-compose ps
    ```
 
 ### Gerando Imagens Docker Manualmente
@@ -186,67 +131,53 @@ Caso você prefira gerar e gerenciar as imagens Docker individualmente, siga est
 
    **Microserviço de Produtos**
    ```bash
-   cd services/products
-   docker build -t ecommerce/products:latest .
+   cd services/produtos-service
+   docker build -t ecommerce/produtos:latest .
    ```
 
    **Microserviço de Categorias**
    ```bash
-   cd services/categories
-   docker build -t ecommerce/categories:latest .
+   cd services/categorias-service
+   docker build -t ecommerce/categorias:latest .
    ```
 
    **Microserviço de Fornecedores**
    ```bash
-   cd services/suppliers
-   docker build -t ecommerce/suppliers:latest .
+   cd services/fornecedores-service
+   docker build -t ecommerce/fornecedores:latest .
    ```
 
    **Microserviço de Avaliações**
    ```bash
-   cd services/reviews
-   docker build -t ecommerce/reviews:latest .
+   cd services/avaliacoes-service
+   docker build -t ecommerce/avaliacoes:latest .
    ```
 
 2. Execute cada container individualmente:
 
    **Produtos**
    ```bash
-   docker run -d -p 5000:5000 --name products -e DATABASE_URL=sqlite:///products.db ecommerce/products:latest
+   docker run -d -p 6001:6001 --name produtos ecommerce/produtos:latest
    ```
 
    **Categorias**
    ```bash
-   docker run -d -p 5001:5001 --name categories -e DATABASE_URL=sqlite:///categories.db ecommerce/categories:latest
+   docker run -d -p 6002:6002 --name categorias ecommerce/categorias:latest
    ```
 
    **Fornecedores**
    ```bash
-   docker run -d -p 5002:5002 --name suppliers -e DATABASE_URL=sqlite:///suppliers.db ecommerce/suppliers:latest
+   docker run -d -p 6003:6003 --name fornecedores ecommerce/fornecedores:latest
    ```
 
    **Avaliações**
    ```bash
-   docker run -d -p 5003:5003 --name reviews -e DATABASE_URL=sqlite:///reviews.db ecommerce/reviews:latest
+   docker run -d -p 6004:6004 --name avaliacoes ecommerce/avaliacoes:latest
    ```
 
 3. Verifique se os containers estão em execução:
    ```bash
    docker ps
-   ```
-
-4. Para publicar suas imagens em um registry (como Docker Hub):
-   ```bash
-   # Faça login no Docker Hub
-   docker login
-   
-   # Adicione tags às imagens
-   docker tag ecommerce/products:latest seu-usuario/ecommerce-products:latest
-   
-   # Envie a imagem para o registry
-   docker push seu-usuario/ecommerce-products:latest
-   
-   # Repita para os outros microserviços
    ```
 
 ### Sem Docker (Desenvolvimento)
@@ -255,7 +186,7 @@ Para executar cada serviço individualmente:
 
 1. Navegue até o diretório do serviço:
    ```
-   cd services/products
+   cd services/produtos
    ```
 
 2. Instale as dependências:
@@ -265,7 +196,7 @@ Para executar cada serviço individualmente:
 
 3. Execute o aplicativo:
    ```
-   flask run --port=5000
+   flask run --port=6001
    ```
 
 4. Repita os passos acima para cada serviço, alterando o diretório e a porta.
@@ -274,10 +205,10 @@ Para executar cada serviço individualmente:
 
 Você pode verificar se os serviços estão funcionando usando:
 
-- Produtos: http://localhost:5000/health
-- Categorias: http://localhost:5001/health
-- Fornecedores: http://localhost:5002/health
-- Avaliações: http://localhost:5003/health
+- Produtos: http://localhost:6001/health
+- Categorias: http://localhost:6002/health
+- Fornecedores: http://localhost:6003/health
+- Avaliações: http://localhost:6004/health
 
 ## Desenvolvimento Futuro
 
@@ -287,7 +218,3 @@ Você pode verificar se os serviços estão funcionando usando:
 - Adicionar testes automatizados
 - Configurar CI/CD
 - Migrar para bancos de dados específicos para cada serviço
-
-## Licença
-
-Este projeto está licenciado sob a licença MIT - consulte o arquivo LICENSE para obter detalhes.

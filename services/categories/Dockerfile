@@ -8,17 +8,15 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV FLASK_APP=app.py
-ENV FLASK_ENV=production
 
 # Instala as dependências
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir flask gunicorn
 
 # Copia o código fonte para o diretório de trabalho
-COPY . .
+COPY app.py .
 
 # Informa em qual porta o container estará escutando
-EXPOSE 5001
+EXPOSE 7001
 
 # Comando para iniciar o aplicativo quando o container for executado
-CMD ["gunicorn", "--bind", "0.0.0.0:5001", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:6001", "app:app"]
